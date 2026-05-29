@@ -34,7 +34,7 @@ def seleccionar_solicitar_nueva_posicion(driver):
 
     time.sleep(1)
 
-def seleccionar_informacion_adicional(driver):
+def seleccionar_informacion_adicional_nueva_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -72,7 +72,7 @@ def seleccionar_informacion_adicional(driver):
 
     time.sleep(1)
 
-def seleccionar_informacion_legislativa(driver):
+def seleccionar_informacion_legislativa_nueva_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -110,7 +110,7 @@ def seleccionar_informacion_legislativa(driver):
 
     time.sleep(1)
 
-def presionar_boton_continuar(driver):
+def presionar_boton_continuar_formulario_nueva_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -183,7 +183,7 @@ def seleccionar_motivo_solicitud(driver):
 
     time.sleep(1)
 
-def presionar_boton_continuar(driver):
+def presionar_boton_continuar_detalles_nueva_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -968,7 +968,7 @@ def saltar_grupo_registro(driver):
 
     time.sleep(2)
 
-def presionar_boton_continuar(driver):
+def presionar_boton_continuar_nueva_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -1084,7 +1084,7 @@ def seleccionar_posicion(driver):
 
     time.sleep(1)
 
-def seleccionar_informacion_adicional(driver):
+def seleccionar_informacion_adicional_cambio_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -1111,7 +1111,7 @@ def seleccionar_informacion_adicional(driver):
 
     time.sleep(1)
 
-def seleccionar_informacion_legislativa(driver):
+def seleccionar_informacion_legislativa_cambio_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -1143,7 +1143,7 @@ def seleccionar_informacion_legislativa(driver):
 
         time.sleep(1)
 
-def presionar_boton_continuar(driver):
+def presionar_boton_continuar_cambio_posicion(driver):
 
     wait = WebDriverWait(driver, 40)
 
@@ -1267,7 +1267,7 @@ def seleccionar_motivo_solicitud_cambio_posicion(driver):
 
     time.sleep(1)
 
-def presionar_boton_continuar(driver):
+def presionar_boton_continuar_cambio_posicion_final(driver):
 
     wait = WebDriverWait(driver, 40)
 

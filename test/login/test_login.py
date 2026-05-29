@@ -1,24 +1,12 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import pytest
 
 from Helpers.login.login_helpers import login
 
 
-def test_login_exitoso(driver, credenciales_hcm):
-
-    usuario, password = credenciales_hcm
-
-    login(driver, usuario, password)
-
-    wait = WebDriverWait(driver, 40)
-
-    wait.until(
-        EC.url_contains("AtkHomePageWelcome")
-    )
-
-    assert "AtkHomePageWelcome" in driver.current_url
+def test_login_exitoso(sesion_hcm):
+    assert "AtkHomePageWelcome" in sesion_hcm.current_url
 
 
 @pytest.mark.parametrize(
@@ -59,4 +47,4 @@ def test_login_negativo(driver, credenciales_hcm, caso):
 
     assert "signin" in driver.current_url
 
-    #Para correr solo login: pytest test/login -v -s
+    # Para correr solo login: pytest test/login -v -s

@@ -2,7 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 
 def seleccionar_posiciones(driver):
 
@@ -19,7 +18,11 @@ def seleccionar_posiciones(driver):
 
     driver.execute_script("arguments[0].click();", posiciones)
 
-    time.sleep(1)
+    wait.until(
+        EC.visibility_of_element_located(
+            (By.ID, "ojHcmAdvancedSearchBox_position-adv-srch|input")
+        )
+    )
 
 def buscador_posiciones(driver, valor_buscador):
 
@@ -35,8 +38,10 @@ def buscador_posiciones(driver, valor_buscador):
 
     buscador.send_keys(valor_buscador)
 
-    time.sleep(1)
-
     buscador.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    return wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, f"//*[contains(normalize-space(), '{valor_buscador}')]")
+        )
+    )
