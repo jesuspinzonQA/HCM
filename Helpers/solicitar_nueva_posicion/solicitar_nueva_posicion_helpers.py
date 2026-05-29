@@ -1057,15 +1057,15 @@ def buscar_posicion(driver, valor):
 
     time.sleep(1)
 
-def seleccionar_posicion(driver):
+def seleccionar_posicion(driver, valor):
 
     wait = WebDriverWait(driver, 40)
 
     posicion = wait.until(
-        EC.presence_of_element_located(
+        EC.element_to_be_clickable(
             (
                 By.XPATH,
-                "//a[contains(.,'Delegación Gremial - Promotor de Delegacion gremial')]"
+                f"//a[contains(normalize-space(), '{valor}')]"
             )
         )
     )
