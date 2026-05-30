@@ -5,13 +5,36 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 
-def boton_agregar_posiciones(driver):
+
+def esperar_campo_fecha_inicio_vigencia(driver):
 
     wait = WebDriverWait(driver, 30)
 
+    selectores_fecha = [
+        (By.ID, "effectiveStartDateId|input"),
+        (By.CSS_SELECTOR, "input[id*='effectiveStartDate'][id$='|input']"),
+        (By.CSS_SELECTOR, "input[id*='EffectiveStartDate'][id$='|input']"),
+        (By.CSS_SELECTOR, "input[id*='StartDate'][id$='|input']"),
+        (By.XPATH, "//input[contains(@id,'effectiveStartDate')]"),
+        (By.XPATH, "//input[contains(@aria-label,'Fecha') and contains(@aria-label,'vigencia')]"),
+        (By.XPATH, "//input[contains(@aria-label,'Date') and contains(@aria-label,'start')]"),
+    ]
+
+    for selector in selectores_fecha:
+        try:
+            return wait.until(
+                EC.element_to_be_clickable(selector)
+            )
+        except Exception:
+            pass
+
+    raise AssertionError("No se encontro el campo Fecha inicio vigencia en el formulario de nueva posicion.")
+
+def boton_agregar_posiciones(driver):
+
     selectores_boton_agregar = [
-        (By.XPATH, "//button[@aria-label='Agregar posición']"),
-        (By.XPATH, "//button[normalize-space()='Agregar posición']"),
+        (By.XPATH, "//button[contains(@aria-label,'Agregar posici')]"),
+        (By.XPATH, "//button[contains(normalize-space(),'Agregar posici')]"),
         (By.ID, "searchResultsEmptyStateText1_primaryAction"),
         (By.CSS_SELECTOR, "#oj_ssce1_h_primaryActionFromHeader_primaryActionCta button"),
         (By.XPATH, "//button[contains(normalize-space(.),'Agregar')]"),
@@ -25,20 +48,16 @@ def boton_agregar_posiciones(driver):
         botones = driver.find_elements(*selector)
 
         for boton in botones:
-            if not boton.is_displayed() or not boton.is_enabled():
-                continue
-
             url_anterior = driver.current_url
 
-            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton)
-            driver.execute_script("arguments[0].click();", boton)
+            try:
+                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton)
+                driver.execute_script("arguments[0].click();", boton)
+            except Exception:
+                continue
 
             try:
-                wait.until(
-                    EC.element_to_be_clickable(
-                        (By.ID, "effectiveStartDateId|input")
-                    )
-                )
+                esperar_campo_fecha_inicio_vigencia(driver)
                 return
             except Exception:
                 if driver.current_url != url_anterior:
@@ -51,13 +70,7 @@ def boton_agregar_posiciones(driver):
 
 def completar_fecha_inicio_vigencia(driver, fecha):
 
-    wait = WebDriverWait(driver, 30)
-
-    campo_fecha = wait.until(
-        EC.element_to_be_clickable(
-            (By.ID, "effectiveStartDateId|input")
-        )
-    )
+    campo_fecha = esperar_campo_fecha_inicio_vigencia(driver)
 
     campo_fecha.clear()
 
