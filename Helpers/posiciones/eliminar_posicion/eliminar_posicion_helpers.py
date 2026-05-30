@@ -3,6 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -154,9 +155,16 @@ def confirmar_eliminacion(driver):
 def posicion_sigue_visible(driver, nombre_posicion):
     buscador = _volver_al_buscador_si_es_necesario(driver)
 
-    buscador.clear()
-    buscador.send_keys(nombre_posicion)
-    buscador.send_keys(Keys.ENTER)
+    _click_js(driver, buscador)
+
+    ActionChains(driver) \
+        .key_down(Keys.CONTROL) \
+        .send_keys("a") \
+        .key_up(Keys.CONTROL) \
+        .send_keys(Keys.DELETE) \
+        .send_keys(nombre_posicion) \
+        .send_keys(Keys.ENTER) \
+        .perform()
 
     texto = _xpath_text(nombre_posicion)
 
