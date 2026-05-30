@@ -9,15 +9,37 @@ def boton_agregar_posiciones(driver):
 
     wait = WebDriverWait(driver, 30)
 
-    boton = wait.until(
-        EC.element_to_be_clickable(
-            (By.ID, "searchResultsEmptyStateText1_primaryAction")
-        )
-    )
+    selectores_boton_agregar = [
+        (By.ID, "searchResultsEmptyStateText1_primaryAction"),
+        (By.CSS_SELECTOR, "#oj_ssce1_h_primaryActionFromHeader_primaryActionCta button"),
+        (By.XPATH, "//button[contains(normalize-space(.),'Agregar')]"),
+        (By.XPATH, "//button[contains(@aria-label,'Agregar')]"),
+        (By.XPATH, "//button[contains(@title,'Agregar')]"),
+        (By.XPATH, "//oj-button[contains(@id,'primaryAction')]//button"),
+        (By.XPATH, "//oj-button[contains(@id,'primaryActionCta')]//button"),
+    ]
+
+    boton = None
+
+    for selector in selectores_boton_agregar:
+        try:
+            boton = wait.until(
+                EC.element_to_be_clickable(selector)
+            )
+            break
+        except Exception:
+            pass
+
+    if boton is None:
+        raise AssertionError("No se encontro el boton Agregar posiciones.")
 
     driver.execute_script("arguments[0].click();", boton)
 
-    time.sleep(1)
+    wait.until(
+        EC.element_to_be_clickable(
+            (By.ID, "effectiveStartDateId|input")
+        )
+    )
 
 def completar_fecha_inicio_vigencia(driver, fecha):
 
