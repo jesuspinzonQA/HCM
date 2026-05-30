@@ -166,6 +166,8 @@ def posicion_sigue_visible(driver, nombre_posicion):
         .send_keys(Keys.ENTER) \
         .perform()
 
+    time.sleep(15)
+
     texto = _xpath_text(nombre_posicion)
 
     try:
