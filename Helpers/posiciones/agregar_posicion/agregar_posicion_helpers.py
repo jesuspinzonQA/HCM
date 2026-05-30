@@ -32,81 +32,33 @@ def esperar_campo_fecha_inicio_vigencia(driver):
 
 def boton_agregar_posiciones(driver):
 
-    fin = time.monotonic() + 40
-    botones_visibles = []
+    wait = WebDriverWait(driver, 30)
 
-    while time.monotonic() < fin:
-        resultado = driver.execute_script(
-            """
-            const normalizar = (texto) => (texto || '')
-                .normalize('NFD')
-                .replace(/[\\u0300-\\u036f]/g, '')
-                .toLowerCase();
+    selectores_boton_agregar = [
+        (By.ID, "searchResultsEmptyStateText1_primaryAction"),
+        (By.XPATH, "//button[contains(@aria-label,'Agregar posici')]"),
+        (By.XPATH, "//button[contains(normalize-space(.),'Agregar posici')]"),
+        (By.CSS_SELECTOR, "#oj_ssce1_h_primaryActionFromHeader_primaryActionCta button"),
+    ]
 
-            const candidatos = [
-                ...document.querySelectorAll('button, [role="button"], oj-button')
-            ];
+    boton_agregar = None
 
-            return candidatos.find((elemento) => {
-                const texto = normalizar(
-                    elemento.innerText ||
-                    elemento.textContent ||
-                    elemento.getAttribute('aria-label') ||
-                    elemento.getAttribute('title')
-                );
-                const etiqueta = normalizar(
-                    elemento.getAttribute('aria-label') ||
-                    elemento.getAttribute('title')
-                );
-                const rect = elemento.getBoundingClientRect();
-                const visible = rect.width > 0 && rect.height > 0;
-
-                return visible &&
-                    (texto.includes('agregar') || etiqueta.includes('agregar')) &&
-                    (texto.includes('posici') || etiqueta.includes('posici'));
-            });
-            const visibles = candidatos
-                .filter((elemento) => {
-                    const rect = elemento.getBoundingClientRect();
-                    return rect.width > 0 && rect.height > 0;
-                })
-                .map((elemento) => (
-                    elemento.innerText ||
-                    elemento.textContent ||
-                    elemento.getAttribute('aria-label') ||
-                    elemento.getAttribute('title') ||
-                    elemento.id ||
-                    elemento.tagName
-                ).trim())
-                .filter(Boolean)
-                .slice(0, 20);
-
-            return [boton || null, visibles];
-            """
-        )
-
-        boton_agregar = resultado[0]
-        botones_visibles = resultado[1]
-
-        if boton_agregar:
+    for selector in selectores_boton_agregar:
+        try:
+            boton_agregar = wait.until(
+                EC.presence_of_element_located(selector)
+            )
             break
+        except Exception:
+            pass
 
-        time.sleep(1)
-    else:
-        raise AssertionError(
-            "No se encontro el boton Agregar posicion. "
-            f"Botones visibles detectados: {botones_visibles}"
-        )
+    if boton_agregar is None:
+        raise AssertionError("No se encontro el boton Agregar posicion.")
 
     driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton_agregar)
-
-    try:
-        ActionChains(driver).move_to_element(boton_agregar).click().perform()
-    except Exception:
-        driver.execute_script("arguments[0].click();", boton_agregar)
+    driver.execute_script("arguments[0].click();", boton_agregar)
 
     esperar_campo_fecha_inicio_vigencia(driver)
-    return
 
 
 def completar_fecha_inicio_vigencia(driver, fecha):
