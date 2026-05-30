@@ -2,6 +2,7 @@ import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -54,6 +55,25 @@ def buscar_posicion_a_eliminar(driver, nombre_posicion):
             )
         )
     )
+
+
+def _obtener_buscador_posiciones(driver, timeout=15):
+    wait = WebDriverWait(driver, timeout)
+    return wait.until(
+        EC.visibility_of_element_located(
+            (By.ID, "ojHcmAdvancedSearchBox_position-adv-srch|input")
+        )
+    )
+
+
+def _volver_al_buscador_si_es_necesario(driver):
+    for _ in range(3):
+        try:
+            return _obtener_buscador_posiciones(driver, timeout=5)
+        except TimeoutException:
+            driver.back()
+
+    return _obtener_buscador_posiciones(driver, timeout=20)
 
 
 def buscar_y_seleccionar_posicion_por_nombre(driver, nombre_posicion):
@@ -129,6 +149,29 @@ def confirmar_eliminacion(driver):
 
     _click_js(driver, boton_confirmar)
     return True
+
+
+def posicion_sigue_visible(driver, nombre_posicion):
+    buscador = _volver_al_buscador_si_es_necesario(driver)
+
+    buscador.clear()
+    buscador.send_keys(nombre_posicion)
+    buscador.send_keys(Keys.ENTER)
+
+    texto = _xpath_text(nombre_posicion)
+
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(
+                (
+                    By.XPATH,
+                    f"//td[contains(@class,'oj-table-data-cell')]//a[.//span[normalize-space()={texto}]]",
+                )
+            )
+        )
+        return True
+    except TimeoutException:
+        return False
 
 
 def eliminar_posicion(driver, nombre_posicion):
