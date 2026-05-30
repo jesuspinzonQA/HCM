@@ -33,8 +33,11 @@ def esperar_campo_fecha_inicio_vigencia(driver):
 def boton_agregar_posiciones(driver):
 
     selectores_boton_agregar = [
+        (By.CSS_SELECTOR, "button[aria-label*='Agregar']"),
         (By.XPATH, "//button[contains(@aria-label,'Agregar posici')]"),
         (By.XPATH, "//button[contains(normalize-space(),'Agregar posici')]"),
+        (By.XPATH, "//*[self::button or @role='button'][contains(normalize-space(.),'Agregar posición')]"),
+        (By.XPATH, "//*[self::button or @role='button'][contains(normalize-space(.),'Agregar posici')]"),
         (By.ID, "searchResultsEmptyStateText1_primaryAction"),
         (By.CSS_SELECTOR, "#oj_ssce1_h_primaryActionFromHeader_primaryActionCta button"),
         (By.XPATH, "//button[contains(normalize-space(.),'Agregar')]"),
@@ -52,17 +55,35 @@ def boton_agregar_posiciones(driver):
 
             try:
                 driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton)
-                driver.execute_script("arguments[0].click();", boton)
+                ActionChains(driver).move_to_element(boton).click().perform()
             except Exception:
-                continue
+                try:
+                    boton.click()
+                except Exception:
+                    try:
+                        driver.execute_script("arguments[0].click();", boton)
+                    except Exception:
+                        continue
+
+            time.sleep(2)
 
             try:
                 esperar_campo_fecha_inicio_vigencia(driver)
                 return
             except Exception:
-                if driver.current_url != url_anterior:
-                    driver.back()
-                    time.sleep(2)
+                pass
+
+            try:
+                driver.execute_script("arguments[0].click();", boton)
+                time.sleep(2)
+                esperar_campo_fecha_inicio_vigencia(driver)
+                return
+            except Exception:
+                pass
+
+            if driver.current_url != url_anterior:
+                driver.back()
+                time.sleep(2)
 
     raise AssertionError(
         "No se encontro un boton Agregar posiciones que abra el formulario de nueva posicion."
