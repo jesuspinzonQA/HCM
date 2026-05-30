@@ -59,6 +59,9 @@ def buscar_posicion_a_eliminar(driver, nombre_posicion):
 def buscar_y_seleccionar_posicion_por_nombre(driver, nombre_posicion):
     posicion = buscar_posicion_a_eliminar(driver, nombre_posicion)
     _click_js(driver, posicion)
+    WebDriverWait(driver, 40).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
+    )
 
 
 def abrir_posicion(driver, nombre_posicion):
@@ -69,6 +72,9 @@ def abrir_menu_acciones(driver):
     boton_acciones = _primer_clickable(
         driver,
         [
+            (By.XPATH, "//button[@aria-label='Más acciones']"),
+            (By.XPATH, "//button[@aria-label='Mas acciones']"),
+            (By.XPATH, "//button[.//span[contains(@class,'oj-ux-ico-overflow-h')]]"),
             (By.XPATH, "//button[contains(normalize-space(.),'Acciones')]"),
             (By.XPATH, "//button[contains(normalize-space(.),'Actions')]"),
             (By.XPATH, "//button[contains(@aria-label,'Acciones')]"),
@@ -88,6 +94,9 @@ def seleccionar_opcion_eliminar(driver):
     opcion_eliminar = _primer_clickable(
         driver,
         [
+            (By.XPATH, "//a[@role='menuitem' and @data-oj-label='Suprimir posición']"),
+            (By.XPATH, "//a[@role='menuitem' and @data-oj-key='pageGeneralHeader_h_delete_position_action']"),
+            (By.XPATH, "//*[@role='menuitem'][.//span[normalize-space()='Suprimir posición']]"),
             (By.XPATH, "//*[self::a or self::button or @role='menuitem'][contains(normalize-space(.),'Eliminar')]"),
             (By.XPATH, "//*[self::a or self::button or @role='menuitem'][contains(normalize-space(.),'Suprimir')]"),
             (By.XPATH, "//*[self::a or self::button or @role='menuitem'][contains(normalize-space(.),'Delete')]"),
@@ -101,6 +110,9 @@ def confirmar_eliminacion(driver):
         boton_confirmar = _primer_clickable(
             driver,
             [
+                (By.CSS_SELECTOR, "#deletePositionDialog_deleteConfirm button"),
+                (By.ID, "deletePositionDialog_deleteConfirm"),
+                (By.XPATH, "//oj-button[@id='deletePositionDialog_deleteConfirm']//button"),
                 (By.XPATH, "//button[contains(normalize-space(.),'Eliminar')]"),
                 (By.XPATH, "//button[contains(normalize-space(.),'Suprimir')]"),
                 (By.XPATH, "//button[contains(normalize-space(.),'Aceptar')]"),
