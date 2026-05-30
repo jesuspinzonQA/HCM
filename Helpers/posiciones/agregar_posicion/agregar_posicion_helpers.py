@@ -32,17 +32,71 @@ def esperar_campo_fecha_inicio_vigencia(driver):
 
 def boton_agregar_posiciones(driver):
 
-    wait = WebDriverWait(driver, 30)
+    fin = time.monotonic() + 40
+    botones_visibles = []
 
-    boton_agregar = wait.until(
-        EC.element_to_be_clickable(
-            (
-                By.XPATH,
-                "//button[contains(@aria-label,'Agregar posici') "
-                "and contains(normalize-space(.),'Agregar posici')]",
-            )
+    while time.monotonic() < fin:
+        resultado = driver.execute_script(
+            """
+            const normalizar = (texto) => (texto || '')
+                .normalize('NFD')
+                .replace(/[\\u0300-\\u036f]/g, '')
+                .toLowerCase();
+
+            const candidatos = [
+                ...document.querySelectorAll('button, [role="button"], oj-button')
+            ];
+
+            return candidatos.find((elemento) => {
+                const texto = normalizar(
+                    elemento.innerText ||
+                    elemento.textContent ||
+                    elemento.getAttribute('aria-label') ||
+                    elemento.getAttribute('title')
+                );
+                const etiqueta = normalizar(
+                    elemento.getAttribute('aria-label') ||
+                    elemento.getAttribute('title')
+                );
+                const rect = elemento.getBoundingClientRect();
+                const visible = rect.width > 0 && rect.height > 0;
+
+                return visible &&
+                    (texto.includes('agregar') || etiqueta.includes('agregar')) &&
+                    (texto.includes('posici') || etiqueta.includes('posici'));
+            });
+            const visibles = candidatos
+                .filter((elemento) => {
+                    const rect = elemento.getBoundingClientRect();
+                    return rect.width > 0 && rect.height > 0;
+                })
+                .map((elemento) => (
+                    elemento.innerText ||
+                    elemento.textContent ||
+                    elemento.getAttribute('aria-label') ||
+                    elemento.getAttribute('title') ||
+                    elemento.id ||
+                    elemento.tagName
+                ).trim())
+                .filter(Boolean)
+                .slice(0, 20);
+
+            return [boton || null, visibles];
+            """
         )
-    )
+
+        boton_agregar = resultado[0]
+        botones_visibles = resultado[1]
+
+        if boton_agregar:
+            break
+
+        time.sleep(1)
+    else:
+        raise AssertionError(
+            "No se encontro el boton Agregar posicion. "
+            f"Botones visibles detectados: {botones_visibles}"
+        )
 
     driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton_agregar)
 
