@@ -41,4 +41,4 @@ def test_eliminar_posicion(estructuras_personal, posicion_eliminar):
         print(f"La posicion '{posicion_eliminar}' sigue visible. El test fallo al no eliminarla.")
         assert False, f"La posicion '{posicion_eliminar}' sigue visible luego de intentar eliminarla."
 
-    # Para correr solamente este test: pytest test\modulo_estructuras_de_personal\01_posiciones\05_test_eliminar_posicion.py::test_eliminar_posicion -v -s --posicion-eliminar "Prueba QA Jesus"
+    # Para correr solamente este test: pytest test\modulo_estructuras_de_personal\01_posiciones\05_test_eliminar_posicion.py::test_eliminar_posicion -v -s
