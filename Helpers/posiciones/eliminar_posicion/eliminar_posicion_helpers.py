@@ -145,16 +145,19 @@ def buscar_posicion_eliminada(driver, nombre_posicion):
 
     buscador = volver_al_buscador_posiciones(driver)
 
-    click_con_javascript(driver, buscador)
+    driver.execute_script("arguments[0].scrollIntoView({block:'center'});", buscador)
+    driver.execute_script("arguments[0].focus();", buscador)
+    driver.execute_script(
+        """
+        arguments[0].value = '';
+        arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+        arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+        """,
+        buscador
+    )
 
-    ActionChains(driver) \
-        .key_down(Keys.CONTROL) \
-        .send_keys("a") \
-        .key_up(Keys.CONTROL) \
-        .send_keys(Keys.DELETE) \
-        .send_keys(nombre_posicion) \
-        .send_keys(Keys.ENTER) \
-        .perform()
+    buscador.send_keys(nombre_posicion)
+    buscador.send_keys(Keys.ENTER)
 
     time.sleep(15)
 
