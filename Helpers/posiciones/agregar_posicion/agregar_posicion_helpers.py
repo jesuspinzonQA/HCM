@@ -32,62 +32,28 @@ def esperar_campo_fecha_inicio_vigencia(driver):
 
 def boton_agregar_posiciones(driver):
 
-    selectores_boton_agregar = [
-        (By.CSS_SELECTOR, "button[aria-label*='Agregar']"),
-        (By.XPATH, "//button[contains(@aria-label,'Agregar posici')]"),
-        (By.XPATH, "//button[contains(normalize-space(),'Agregar posici')]"),
-        (By.XPATH, "//*[self::button or @role='button'][contains(normalize-space(.),'Agregar posición')]"),
-        (By.XPATH, "//*[self::button or @role='button'][contains(normalize-space(.),'Agregar posici')]"),
-        (By.ID, "searchResultsEmptyStateText1_primaryAction"),
-        (By.CSS_SELECTOR, "#oj_ssce1_h_primaryActionFromHeader_primaryActionCta button"),
-        (By.XPATH, "//button[contains(normalize-space(.),'Agregar')]"),
-        (By.XPATH, "//button[contains(@aria-label,'Agregar')]"),
-        (By.XPATH, "//button[contains(@title,'Agregar')]"),
-        (By.XPATH, "//oj-button[contains(@id,'primaryAction')]//button"),
-        (By.XPATH, "//oj-button[contains(@id,'primaryActionCta')]//button"),
-    ]
+    wait = WebDriverWait(driver, 30)
 
-    for selector in selectores_boton_agregar:
-        botones = driver.find_elements(*selector)
-
-        for boton in botones:
-            url_anterior = driver.current_url
-
-            try:
-                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton)
-                ActionChains(driver).move_to_element(boton).click().perform()
-            except Exception:
-                try:
-                    boton.click()
-                except Exception:
-                    try:
-                        driver.execute_script("arguments[0].click();", boton)
-                    except Exception:
-                        continue
-
-            time.sleep(2)
-
-            try:
-                esperar_campo_fecha_inicio_vigencia(driver)
-                return
-            except Exception:
-                pass
-
-            try:
-                driver.execute_script("arguments[0].click();", boton)
-                time.sleep(2)
-                esperar_campo_fecha_inicio_vigencia(driver)
-                return
-            except Exception:
-                pass
-
-            if driver.current_url != url_anterior:
-                driver.back()
-                time.sleep(2)
-
-    raise AssertionError(
-        "No se encontro un boton Agregar posiciones que abra el formulario de nueva posicion."
+    boton_agregar = wait.until(
+        EC.element_to_be_clickable(
+            (
+                By.XPATH,
+                "//button[contains(@aria-label,'Agregar posici') "
+                "and contains(normalize-space(.),'Agregar posici')]",
+            )
+        )
     )
+
+    driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton_agregar)
+
+    try:
+        ActionChains(driver).move_to_element(boton_agregar).click().perform()
+    except Exception:
+        driver.execute_script("arguments[0].click();", boton_agregar)
+
+    esperar_campo_fecha_inicio_vigencia(driver)
+    return
+
 
 def completar_fecha_inicio_vigencia(driver, fecha):
 
