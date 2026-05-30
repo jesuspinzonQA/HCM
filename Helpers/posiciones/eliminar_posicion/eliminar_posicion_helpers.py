@@ -48,14 +48,21 @@ def buscar_posicion_a_eliminar(driver, nombre_posicion):
     texto = _xpath_text(nombre_posicion)
     return wait.until(
         EC.element_to_be_clickable(
-            (By.XPATH, f"//a[contains(normalize-space(), {texto})]")
+            (
+                By.XPATH,
+                f"//td[contains(@class,'oj-table-data-cell')]//a[.//span[normalize-space()={texto}]]",
+            )
         )
     )
 
 
-def abrir_posicion(driver, nombre_posicion):
+def buscar_y_seleccionar_posicion_por_nombre(driver, nombre_posicion):
     posicion = buscar_posicion_a_eliminar(driver, nombre_posicion)
     _click_js(driver, posicion)
+
+
+def abrir_posicion(driver, nombre_posicion):
+    buscar_y_seleccionar_posicion_por_nombre(driver, nombre_posicion)
 
 
 def abrir_menu_acciones(driver):
