@@ -27,6 +27,12 @@ def pytest_addoption(parser):
         help="Nombre de posicion para crear, buscar o modificar.",
     )
     parser.addoption(
+        "--posicion-eliminar",
+        action="store",
+        default=None,
+        help="Nombre de posicion a eliminar. Si no se informa, usa --nombre-posicion.",
+    )
+    parser.addoption(
         "--fecha-vigencia",
         action="store",
         default="19/01/2026",
@@ -60,6 +66,11 @@ def posicion_busqueda(request):
 @pytest.fixture
 def nombre_posicion(request):
     return request.config.getoption("--nombre-posicion")
+
+
+@pytest.fixture
+def posicion_eliminar(request, nombre_posicion):
+    return request.config.getoption("--posicion-eliminar") or nombre_posicion
 
 
 @pytest.fixture
