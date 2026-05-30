@@ -19,26 +19,32 @@ def boton_agregar_posiciones(driver):
         (By.XPATH, "//oj-button[contains(@id,'primaryActionCta')]//button"),
     ]
 
-    boton = None
-
     for selector in selectores_boton_agregar:
-        try:
-            boton = wait.until(
-                EC.element_to_be_clickable(selector)
-            )
-            break
-        except Exception:
-            pass
+        botones = driver.find_elements(*selector)
 
-    if boton is None:
-        raise AssertionError("No se encontro el boton Agregar posiciones.")
+        for boton in botones:
+            if not boton.is_displayed() or not boton.is_enabled():
+                continue
 
-    driver.execute_script("arguments[0].click();", boton)
+            url_anterior = driver.current_url
 
-    wait.until(
-        EC.element_to_be_clickable(
-            (By.ID, "effectiveStartDateId|input")
-        )
+            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", boton)
+            driver.execute_script("arguments[0].click();", boton)
+
+            try:
+                wait.until(
+                    EC.element_to_be_clickable(
+                        (By.ID, "effectiveStartDateId|input")
+                    )
+                )
+                return
+            except Exception:
+                if driver.current_url != url_anterior:
+                    driver.back()
+                    time.sleep(2)
+
+    raise AssertionError(
+        "No se encontro un boton Agregar posiciones que abra el formulario de nueva posicion."
     )
 
 def completar_fecha_inicio_vigencia(driver, fecha):
