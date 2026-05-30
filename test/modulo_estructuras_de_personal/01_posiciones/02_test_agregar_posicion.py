@@ -34,16 +34,16 @@ from Helpers.posiciones.agregar_posicion.agregar_posicion_helpers import (
 )
 
 
-def test_agregar_una_posicion(estructuras_personal):
+def test_agregar_una_posicion(estructuras_personal, fecha_vigencia, nombre_posicion):
 
     seleccionar_posiciones(estructuras_personal)
     boton_agregar_posiciones(estructuras_personal)
-    completar_fecha_inicio_vigencia(estructuras_personal, "19/01/2026")
+    completar_fecha_inicio_vigencia(estructuras_personal, fecha_vigencia)
     seleccionar_motivo_accion(estructuras_personal)
     seleccionar_estado(estructuras_personal, "Activa")
     seleccionar_posicion_principal(estructuras_personal)
     seleccionar_unidad_negocio(estructuras_personal)
-    completar_nombre(estructuras_personal, "Prueba QA Jesus")
+    completar_nombre(estructuras_personal, nombre_posicion)
     saltar_campo_codigo(estructuras_personal)
     seleccionar_departamento(estructuras_personal)
     completar_puesto(estructuras_personal)
@@ -65,6 +65,6 @@ def test_agregar_una_posicion(estructuras_personal):
     presionar_boton_guardar_grupos_validos(estructuras_personal)
     presionar_boton_ejecutar(estructuras_personal)
     esperar_pantalla_buscador_posiciones(estructuras_personal)
-    buscar_posicion_creada(estructuras_personal, "Prueba QA Jesus")
+    buscar_posicion_creada(estructuras_personal, nombre_posicion)
 
     # Para correr solamente este test: pytest test\modulo_estructuras_de_personal\01_posiciones\02_test_agregar_posicion.py::test_agregar_una_posicion -v -s

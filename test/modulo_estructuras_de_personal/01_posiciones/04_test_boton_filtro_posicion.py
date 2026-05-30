@@ -18,11 +18,11 @@ from Helpers.posiciones.boton_filtro_posicion.boton_filtro_posicion_helpers impo
 )
 
 
-def test_boton_filtro_posicion(estructuras_personal):
+def test_boton_filtro_posicion(estructuras_personal, fecha_filtro):
 
     seleccionar_posiciones(estructuras_personal)
     abrir_boton_filtros(estructuras_personal)
-    seleccionar_fecha_vigencia_filtro(estructuras_personal, "01/01/2024")
+    seleccionar_fecha_vigencia_filtro(estructuras_personal, fecha_filtro)
     seleccionar_estado_activa(estructuras_personal)
     seleccionar_titulares(estructuras_personal)
     seleccionar_posicion_principal(estructuras_personal)

@@ -11,13 +11,11 @@ from Helpers.solicitar_nueva_posicion.solicitar_nueva_posicion_helpers import (
 )
 
 
-def test_solicitar_cambio_posicion(estructuras_personal):
-
-    posicion = "Prueba QA Jesus"
+def test_solicitar_cambio_posicion(estructuras_personal, nombre_posicion):
 
     seleccionar_solicitar_cambio_posicion(estructuras_personal)
-    buscar_posicion(estructuras_personal, posicion)
-    seleccionar_posicion(estructuras_personal, posicion)
+    buscar_posicion(estructuras_personal, nombre_posicion)
+    seleccionar_posicion(estructuras_personal, nombre_posicion)
     seleccionar_informacion_adicional_cambio_posicion(estructuras_personal)
     seleccionar_informacion_legislativa_cambio_posicion(estructuras_personal)
     presionar_boton_continuar_cambio_posicion(estructuras_personal)

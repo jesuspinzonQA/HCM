@@ -13,6 +13,75 @@ from Helpers.navegacion_a_estructuras_de_personal.navegacion_estructuras_helpers
 )
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--posicion-busqueda",
+        action="store",
+        default="Sucursal Microcentro",
+        help="Texto para buscar posiciones.",
+    )
+    parser.addoption(
+        "--nombre-posicion",
+        action="store",
+        default="Prueba QA Jesus",
+        help="Nombre de posicion para crear, buscar o modificar.",
+    )
+    parser.addoption(
+        "--fecha-vigencia",
+        action="store",
+        default="19/01/2026",
+        help="Fecha de inicio de vigencia para crear posicion.",
+    )
+    parser.addoption(
+        "--fecha-filtro",
+        action="store",
+        default="01/01/2024",
+        help="Fecha usada en filtros de posicion.",
+    )
+    parser.addoption(
+        "--codigo-posicion-principal",
+        action="store",
+        default="300016",
+        help="Codigo de posicion principal para filtros.",
+    )
+    parser.addoption(
+        "--nombre-posicion-principal",
+        action="store",
+        default="Relaciones Laborales, Liquidaciones y Servicios de Salud - Resp. Relaciones Laborales, Liquidaci\u00f3n y Servicios de Salud",
+        help="Nombre de posicion principal para filtros.",
+    )
+
+
+@pytest.fixture
+def posicion_busqueda(request):
+    return request.config.getoption("--posicion-busqueda")
+
+
+@pytest.fixture
+def nombre_posicion(request):
+    return request.config.getoption("--nombre-posicion")
+
+
+@pytest.fixture
+def fecha_vigencia(request):
+    return request.config.getoption("--fecha-vigencia")
+
+
+@pytest.fixture
+def fecha_filtro(request):
+    return request.config.getoption("--fecha-filtro")
+
+
+@pytest.fixture
+def codigo_posicion_principal(request):
+    return request.config.getoption("--codigo-posicion-principal")
+
+
+@pytest.fixture
+def nombre_posicion_principal(request):
+    return request.config.getoption("--nombre-posicion-principal")
+
+
 @pytest.fixture
 def credenciales_hcm():
     usuario = os.environ.get("HCM_USER")

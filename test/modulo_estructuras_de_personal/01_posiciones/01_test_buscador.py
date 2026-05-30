@@ -4,12 +4,12 @@ from Helpers.posiciones.buscador_posicion.buscador_helpers import (
 )
 
 
-def test_buscador_posiciones(estructuras_personal):
+def test_buscador_posiciones(estructuras_personal, posicion_busqueda):
 
     seleccionar_posiciones(estructuras_personal)
 
-    resultado = buscador_posiciones(estructuras_personal, "Sucursal Microcentro")
+    resultado = buscador_posiciones(estructuras_personal, posicion_busqueda)
 
-    assert "Sucursal Microcentro" in resultado.text
+    assert posicion_busqueda in resultado.text
 
     # Para correr solamente este test: pytest test\modulo_estructuras_de_personal\01_posiciones\01_test_buscador.py::test_buscador_posiciones -v -s
