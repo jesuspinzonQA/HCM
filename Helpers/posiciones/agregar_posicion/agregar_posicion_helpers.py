@@ -10,6 +10,8 @@ def boton_agregar_posiciones(driver):
     wait = WebDriverWait(driver, 30)
 
     selectores_boton_agregar = [
+        (By.XPATH, "//button[@aria-label='Agregar posición']"),
+        (By.XPATH, "//button[normalize-space()='Agregar posición']"),
         (By.ID, "searchResultsEmptyStateText1_primaryAction"),
         (By.CSS_SELECTOR, "#oj_ssce1_h_primaryActionFromHeader_primaryActionCta button"),
         (By.XPATH, "//button[contains(normalize-space(.),'Agregar')]"),
